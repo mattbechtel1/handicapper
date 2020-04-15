@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import AmericanOptionsContainer from './AmericanOptionsContainer'
 
 const styles = StyleSheet.create({
@@ -8,14 +8,12 @@ const styles = StyleSheet.create({
         marginTop: 50,
         flex: 1,
     },
-    text: {
-        // textAlign: 'center',
-        flex: 1
-    },
     optLine: {
         flex: 1,
         flexDirection: 'row',
         backgroundColor: '#f44336',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     secondArea: {
         flex: 3,
@@ -39,11 +37,9 @@ const AmericanOdds = () => {
 
     return <View style={styles.container}>
         <View style={styles.optLine}>
-           <View style={styles.text}>
                 <AmericanOptionsContainer count={optCount} />
-           </View>
-
         </View>
+        <Text>Change Available Options:</Text>
         <View style={styles.secondArea} />
     </View>
 }
