@@ -1,5 +1,6 @@
 import React from 'react'
 import AmericanOption from './AmericanOption'
+import { View } from 'react-native'
 
 const AmericanOptionsContainer = ({count}) => {
     const options = []
@@ -10,7 +11,9 @@ const AmericanOptionsContainer = ({count}) => {
         i++
     }
     console.log(options)
-    return options.map(optNum => <AmericanOption key={optNum} />)
+    return <View style={{flexDirection: 'row'}}>
+        {options.map(optNum => <AmericanOption key={optNum} />)}
+    </View> 
 }
 
 export default AmericanOptionsContainer
