@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
     optionNum: {
         textAlign: 'center',
-        fontWeight: 700
+        fontWeight: "700"
     }
 })
 

@@ -1,6 +1,7 @@
-import React, {useState} from 'react'
+import React, {useState, useReducer} from 'react'
 import { View, StyleSheet, Text, Button } from 'react-native'
 import AmericanOptionsContainer from './AmericanOptionsContainer'
+import { amOddsReducer, amOddsMoneylineReducer, optionsCount } from '../state/reducers'
 // import Button from './Button'
 
 const styles = StyleSheet.create({
@@ -38,26 +39,32 @@ const calculate = (moneyline, certainty) => {
 }
 
 const AmericanOdds = ({theme}) => {
-    const [optCount, changeOptCount] = useState(2)
+    const [moneylines, changeMoneyline] = useReducer(amOddsMoneylineReducer, [{moneyline: 100, probability: 0}, {moneyline: 100, probability: 0}])
     const [bestBet, calculateBet] = useState('')
+    const [amOddsResult, calculateResult] = useReducer(amOddsReducer, 'Please enter info')
+    console.log('Rendering American Odds')
 
-    const displayResult = (e) => 'o'
+    const displayResult = () => {
+        calculate()
+    }
+    console.log(moneylines.length)
+    console.log(moneylines[1])
 
     return <View style={styles.container}>
         <View style={styles.optLine}>
-            <AmericanOptionsContainer count={optCount} />
+            <AmericanOptionsContainer options={moneylines} />
             <Text>Change Available Options:</Text>
             <View style={{flexDirection: 'row'}}>
                 <Button 
-                    onPress={() => changeOptCount(optCount + 1)}
+                    onPress={() => changeMoneyline({type: 'ADD_NEW'})}
                     title='+'
-                    disabled={optCount >= 10}
+                    disabled={moneylines.length >= 10}
                     color='#ff00ff'
                 />
                 <Button 
-                    onPress={() => changeOptCount(optCount - 1)}
+                    onPress={() => changeMoneyline({type: "REMOVE_ONE"})}
                     title='-'
-                    disabled={optCount <= 1}
+                    disabled={moneylines.length <= 1}
                     color='#44c4c4'
                 />
             </View>
@@ -70,7 +77,7 @@ const AmericanOdds = ({theme}) => {
             </View>
         </View>
         <View style={styles.secondArea}>
-            <Text style={styles.resultText}>Hi</Text>
+            <Text style={styles.resultText}>{amOddsResult}</Text>
         </View>
     </View>
 }
