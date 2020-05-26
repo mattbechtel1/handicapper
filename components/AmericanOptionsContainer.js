@@ -12,14 +12,20 @@ const styles = StyleSheet.create({
     }
 })
 
-const AmericanOptionsContainer = ({options, count}) => {
+const AmericanOptionsContainer = ({options, changeLine, changeProbability}) => {
 
     return <View style={{flexDirection: 'row'}}>
         <View style={styles.note}>
-            <Text>You have {count} options.</Text>
+            <Text>You have {options.length} options.</Text>
             <Text>Must add up to 100%</Text>
         </View>
-        {options.map((option, index) => <AmericanOption key={index} title={`Option #${index + 1}`} moneyline={option.moneyline} prob={option.probability} />)}
+        {options.map((option, index) => <AmericanOption 
+            key={index} 
+            optIdx={index} 
+            option={option} 
+            changeLine={changeLine}
+            changeProbability={changeProbability}
+        />)}
     </View> 
 }
 

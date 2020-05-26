@@ -15,22 +15,22 @@ const styles = StyleSheet.create({
     }
 })
 
-const AmericanOption = ({title}) => {
-    const [odds, setOdds] = useState(100)
-    const [winPercent, setPercent] = useState(0)
-    const displayedOdds = odds > 0 ? `+${odds}` : odds
+const AmericanOption = ({optIdx, option: {moneyline, probability}, changeLine, changeProbability}) => {
+    const displayedOdds = moneyline > 0 ? `+${moneyline}` : moneyline
 
     return <View style={styles.outerBox}>
         <View style={{flexDirection: 'column'}}>
-            <Text style={styles.optionNum}>{title}</Text>
+            <Text style={styles.optionNum}>{`Option #${optIdx + 1}`}</Text>
             <NumericInput
-                value={String(odds)}
-                onChangeText={value => setOdds(value)}
+                value={String(moneyline)}
+                revertVal={String(moneyline)}
+                onChangeText={newVal => changeLine(newVal, optIdx)}
             />
-            <Text style={{alignSelf: 'center'}}>{displayedOdds}</Text>
+            <Text style={{alignSelf: 'center'}}>{`Odds: ${displayedOdds}`}</Text>
             <NumericInput
-                value={String(winPercent)}
-                onChangeText={value => setPercent(value)}
+                value={String(probability)}
+                revertVal={String(probability)}
+                onChangeText={newVal => changeProbability(newVal, optIdx)}
             />
         </View>
     </View>

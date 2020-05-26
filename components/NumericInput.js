@@ -14,12 +14,21 @@ const styles = StyleSheet.create({
 })
 
 export default function NumericInput({value, onChangeText}) {
-    const onChange = (text) => onChangeText(parseInt(text))
+    const onChange = text => {
+        const int = parseInt(text)
+        if (text === '' || text === '-') {
+            onChangeText(text)
+        } else if (isNaN(int)) {
+            onChangeText(value)
+        } else {
+            onChangeText(int)
+        }
+    }
 
     return <TextInput 
         value={value}
         keyboardType='number-pad'
         style={styles.picker}
-        onChangeText={(input) => onChange(input)}
+        onChangeText={input => onChange(input)}
     />
 }

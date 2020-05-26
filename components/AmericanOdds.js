@@ -39,30 +39,44 @@ const calculate = (moneyline, certainty) => {
 }
 
 const AmericanOdds = ({theme}) => {
-    const [moneylines, changeMoneyline] = useReducer(amOddsMoneylineReducer, [{moneyline: 100, probability: 0}, {moneyline: 100, probability: 0}])
-    const [bestBet, calculateBet] = useState('')
+    const [moneylines, changeMoneyline] = useState([{moneyline: 100, probability: 0}, {moneyline: 100, probability: 0}])
+    console.log(moneylines)
+    
+    const changeOptionLine = (value, index) => {
+        let selection = moneylines[index]
+        selection.moneyline = value
+        changeMoneyline([...moneylines.slice(0, index), selection, ...moneylines.slice(index + 1)])
+    }
+
+    const changeProbability = (value, index) => {
+        let selection = moneylines[index]
+        selection.probability = value
+        changeMoneyline([...moneylines.slice(0, index), selection, ...moneylines.slice(index + 1)])
+    }
+
     const [amOddsResult, calculateResult] = useReducer(amOddsReducer, 'Please enter info')
-    console.log('Rendering American Odds')
 
     const displayResult = () => {
         calculate()
     }
-    console.log(moneylines.length)
-    console.log(moneylines[1])
 
     return <View style={styles.container}>
         <View style={styles.optLine}>
-            <AmericanOptionsContainer options={moneylines} />
+            <AmericanOptionsContainer 
+                options={moneylines}
+                changeLine={changeOptionLine}
+                changeProbability={changeProbability}
+            />
             <Text>Change Available Options:</Text>
             <View style={{flexDirection: 'row'}}>
                 <Button 
-                    onPress={() => changeMoneyline({type: 'ADD_NEW'})}
+                    onPress={() => changeMoneyline([...moneylines, {moneyline: 100, probability: 0}])}
                     title='+'
                     disabled={moneylines.length >= 10}
                     color='#ff00ff'
                 />
                 <Button 
-                    onPress={() => changeMoneyline({type: "REMOVE_ONE"})}
+                    onPress={() => changeMoneyline(moneylines.slice(0, -1))}
                     title='-'
                     disabled={moneylines.length <= 1}
                     color='#44c4c4'
