@@ -16,8 +16,7 @@ const AmericanOptionsContainer = ({options, changeLine, changeProbability}) => {
 
     return <View style={{flexDirection: 'row'}}>
         <View style={styles.note}>
-            <Text>You have {options.length} options.</Text>
-            <Text>Must add up to 100%</Text>
+            <Text>Should add up to 100%</Text>
         </View>
         {options.map((option, index) => <AmericanOption 
             key={index} 

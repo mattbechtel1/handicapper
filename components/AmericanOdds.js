@@ -1,7 +1,6 @@
-import React, {useState, useReducer} from 'react'
+import React, {useState} from 'react'
 import { View, StyleSheet, Text, Button } from 'react-native'
 import AmericanOptionsContainer from './AmericanOptionsContainer'
-import { amOddsReducer, amOddsMoneylineReducer, optionsCount } from '../state/reducers'
 // import Button from './Button'
 
 const styles = StyleSheet.create({
@@ -23,23 +22,14 @@ const styles = StyleSheet.create({
     },
     resultText: {
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign: 'center'
     }
 })
 
 
-const calculate = (moneyline, certainty) => {
-    if (moneyline === 'even' || moneyline === 100 || moneyline === -100) {
-        return certainty > 0.5
-    } else if (moneyline < 0) {
-        return certainty > (moneyline / (moneyline - 100))
-    } else {
-        return certainty > (100 / moneyline)
-    }
-}
-
 const AmericanOdds = ({theme}) => {
-    const [moneylines, changeMoneyline] = useState([{moneyline: 100, probability: 0}, {moneyline: 100, probability: 0}])
+    const [moneylines, changeMoneyline] = useState([{moneyline: 100, probability: 0, title: "Option #1"}, {moneyline: 100, probability: 0, title: "Option #2"}])
     console.log(moneylines)
     
     const changeOptionLine = (value, index) => {
@@ -54,10 +44,21 @@ const AmericanOdds = ({theme}) => {
         changeMoneyline([...moneylines.slice(0, index), selection, ...moneylines.slice(index + 1)])
     }
 
-    const [amOddsResult, calculateResult] = useReducer(amOddsReducer, 'Please enter info')
+    const [amOddsResult, displayResult] = useState('Please enter info')
 
-    const displayResult = () => {
-        calculate()
+    const calculateResult = () => {
+        const implied_percentage = moneyline => { 
+            if (moneyline > 0) { return 100 / (moneyline + 100) } 
+            else { return moneyline / (moneyline - 100) }
+        }
+
+        const maximum_value = moneylines.reduce((memo, {moneyline, probability, title}) => {
+            let value = (probability/100 - implied_percentage(moneyline)) * (probability/100.0) * 10
+            if (memo.value >= value) { return memo } 
+            else { return {value, title: `Best Bet: ${title}`} }
+        }, {value: 0, title: "No good option. Don't bet!"})  
+
+        displayResult(maximum_value.title)
     }
 
     return <View style={styles.container}>
@@ -70,7 +71,7 @@ const AmericanOdds = ({theme}) => {
             <Text>Change Available Options:</Text>
             <View style={{flexDirection: 'row'}}>
                 <Button 
-                    onPress={() => changeMoneyline([...moneylines, {moneyline: 100, probability: 0}])}
+                    onPress={() => changeMoneyline([...moneylines, {moneyline: 100, probability: 0, title: `Option #${moneylines.length}`}])}
                     title='+'
                     disabled={moneylines.length >= 10}
                     color='#ff00ff'
@@ -84,7 +85,7 @@ const AmericanOdds = ({theme}) => {
             </View>
             <View>
                 <Button
-                    onPress={displayResult}
+                    onPress={() => calculateResult()}
                     title='Get best bet'
                     color='#555888'
                 />
